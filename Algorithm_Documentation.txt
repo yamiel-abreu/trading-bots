@@ -1,0 +1,84 @@
+Both bots (the EMA/MACD/RSI bot and the EMA/Stochastic bot) are designed to generate alerts only (not auto-trades). These alerts are based on common swing-trading setups for 1H/4H timeframes.
+
+📊 Bot 1: EMA + MACD + RSI Strategy
+Indicators Used:
+
+EMA(50) and EMA(200) → to filter trend (classic “Golden Cross / Death Cross” logic).
+
+MACD (12, 26, 9) → momentum confirmation.
+
+RSI(14) → to avoid overbought/oversold traps.
+
+Rules:
+🔹 Long Entry (Buy Signal)
+
+Trend: 50 EMA > 200 EMA (uptrend).
+
+MACD: MACD line crosses above signal line (bullish momentum).
+
+RSI: > 50 (bullish zone, not oversold).
+
+
+➡️ Bot sends: “Long signal on [Ticker]”
+
+🔹 Short Entry (Sell Signal)
+
+Trend: 50 EMA < 200 EMA (downtrend).
+
+MACD: MACD line crosses below signal line (bearish momentum).
+
+RSI: < 50 (bearish zone, not overbought).
+
+➡️ Bot sends: “Short signal on [Ticker]”
+
+
+📊 Bot 2: EMA + Stochastic Strategy
+Indicators Used:
+
+EMA(50) and EMA(200) → trend filter.
+
+Stochastic (14, 3, 3) → entry timing (overbought/oversold crosses).
+
+RSI(14) → optional extra filter.
+
+Rules:
+🔹 Long Entry (Buy Signal)
+
+Trend: 50 EMA > 200 EMA (uptrend).
+
+Stochastic: %K line crosses above %D line below 20 (oversold reversal).
+
+RSI: Ideally > 50, but main trigger is Stochastic.
+
+➡️ Bot sends: “Long signal on [Ticker]”
+
+🔹 Short Entry (Sell Signal)
+
+Trend: 50 EMA < 200 EMA (downtrend).
+
+Stochastic: %K crosses below %D above 80 (overbought reversal).
+
+RSI: Ideally < 50, but main trigger is Stochastic.
+
+➡️ Bot sends: “Short signal on [Ticker]”
+
+
+
+✅ Key Difference Between the Bots
+
+Bot 1 (MACD/RSI) → looks for trend continuation signals (when momentum aligns with trend).
+
+Bot 2 (Stochastic) → looks for pullback/reversal entries within the larger trend.
+
+In practice:
+
+Bot 1 gives fewer, stronger “trend-following” signals.
+
+Bot 2 gives more frequent “buy dips / sell rallies” signals.
+
+⚡ Example:
+If EURUSD is trending up (50 EMA > 200 EMA):
+
+Bot 1 alerts when momentum kicks back in (MACD bullish cross + RSI > 50).
+
+Bot 2 alerts when the market dips into oversold (Stochastic < 20) and starts turning back up.

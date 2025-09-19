@@ -1,0 +1,132 @@
+🚀 Option 1: VPS Deployment with Python + Virtualenv + Cron
+1. Install dependencies on your VPS
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3 python3-venv git -y
+
+2. Setup project folder
+mkdir ~/trading-bots && cd ~/trading-bots
+git clone <your-repo-or-copy-files-here>
+
+
+For each bot/config, create a subfolder:
+
+mkdir ~/trading-bots/stochastic_eurusd
+mkdir ~/trading-bots/macd_sp500
+
+3. Setup Python environment in each folder
+cd ~/trading-bots/stochastic_eurusd
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install yfinance pandas requests
+
+
+(repeat in each bot’s folder)
+
+4. Configure environment variables
+
+Create a .env file in each bot’s subfolder:
+
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF
+TELEGRAM_CHAT_ID=987654321
+EMAIL_USER=youremail@gmail.com
+EMAIL_PASS=yourpassword
+EMAIL_TO=destination@gmail.com
+DRY_RUN=false
+
+
+Load .env inside the cron job (using export or direnv), or run via a small shell wrapper script.
+
+5. Test manually
+source venv/bin/activate
+python swing_trading_stochastic_bot.py --test
+
+6. Setup cron
+
+Edit crontab:
+
+crontab -e
+
+
+Example: run every hour
+
+0 * * * * cd ~/trading-bots/stochastic_eurusd && source venv/bin/activate && python swing_trading_stochastic_bot.py --once >> bot.log 2>&1
+
+
+You can create different cron jobs for each subfolder/config.
+
+
+
+🐳 Option 2: VPS Deployment with Docker + docker-compose
+1. Install Docker + Compose
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo systemctl enable docker
+
+2. Project structure
+
+For each bot/config, create a folder:
+
+trading-bots/
+ ├── stochastic_eurusd/
+ │   ├── swing_trading_stochastic_bot.py
+ │   ├── .env
+ │   ├── Dockerfile
+ │   └── docker-compose.yml
+ └── macd_sp500/
+     ├── swing_trading_alert_bot.py
+     ├── .env
+     ├── Dockerfile
+     └── docker-compose.yml
+
+3. Example Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY swing_trading_stochastic_bot.py /app/
+
+RUN pip install --no-cache-dir yfinance pandas requests
+
+CMD ["python", "swing_trading_stochastic_bot.py", "--once"]
+
+4. Example docker-compose.yml
+version: '3.8'
+services:
+  stochastic_eurusd:
+    build: .
+    env_file: .env
+    volumes:
+      - .:/app
+    restart: unless-stopped
+
+5. Run container
+cd ~/trading-bots/stochastic_eurusd
+docker-compose up -d --build
+
+
+This will run once per container start.
+If you want scheduled runs inside Docker:
+
+Use cron on the host, or
+
+Use a loop inside the container (less flexible).
+
+Example: edit docker-compose.yml to run every 1h with host cron:
+
+0 * * * * docker-compose -f ~/trading-bots/stochastic_eurusd/docker-compose.yml run --rm stochastic_eurusd >> bot.log 2>&1
+
+⚖️ Cron vs Docker — Quick Comparison
+Feature	Cron + Virtualenv	Docker + Compose
+Setup	Simpler, native	More complex but portable
+Logs	Redirect to file	Built-in (docker logs)
+Multiple configs	Separate venvs/folders	Separate containers/services
+Maintenance	Needs manual pip updates	Rebuild images with pinned versions
+Scaling	Harder if many bots	Easier (just docker-compose up)
+
+✅ Recommendation:
+
+If you’re only running a few bots → Cron is simpler.
+
+If you’re running lots of configs/tickers → Docker makes it cleaner.
+
+
