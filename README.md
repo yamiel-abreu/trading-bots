@@ -1,7 +1,7 @@
 # trading-bots
 Python Bot that helps with Trading in-out
 
-#Purpose
+# Purpose
 - Lightweight alerting script for 1H/4H swing trading on Forex and Index symbols.
 - Fetches OHLC data (default: yfinance), computes indicators (EMA50/EMA200, RSI14, MACD),
   and sends notifications via Telegram and Email when entry/exit conditions are met.
@@ -33,3 +33,23 @@ Python Bot that helps with Trading in-out
 
 # Extendability
 - Implement BrokerAdapter.fetch_ohlc(symbol, timeframe) to use your broker's REST API.
+
+
+# Key Difference Between the Bots
+
+Bot 1 (MACD/RSI) → looks for trend continuation signals (when momentum aligns with trend).
+
+Bot 2 (Stochastic) → looks for pullback/reversal entries within the larger trend.
+
+In practice:
+
+Bot 1 gives fewer, stronger “trend-following” signals.
+
+Bot 2 gives more frequent “buy dips / sell rallies” signals.
+
+⚡ Example:
+If EURUSD is trending up (50 EMA > 200 EMA):
+
+Bot 1 alerts when momentum kicks back in (MACD bullish cross + RSI > 50).
+
+Bot 2 alerts when the market dips into oversold (Stochastic < 20) and starts turning back up.
