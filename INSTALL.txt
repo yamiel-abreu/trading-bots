@@ -130,3 +130,70 @@ If you’re only running a few bots → Cron is simpler.
 If you’re running lots of configs/tickers → Docker makes it cleaner.
 
 
+
+
+Telegram : Identify chat ID identification instructions
+
+Telegram makes it a bit hidden, but here’s how you can get your chat ID so your bot can send you messages:
+
+🔹 Step 1: Create a Telegram Bot
+Open Telegram and search for @BotFather.
+
+
+Start a chat and run /start.
+
+
+Run /newbot → follow the prompts to name your bot and set a username (must end with bot).
+
+
+BotFather gives you a Bot Token (looks like 123456789:ABCdefGhIJKlmNoPQRstuVWxyZ). Save this!
+
+
+
+🔹 Step 2: Get Your Chat ID
+You have two easy ways:
+Method A (Direct Message with Bot)
+Open your new bot in Telegram and click Start (you must send at least one message).
+
+
+In your browser, go to:
+
+ https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+ (replace <YOUR_BOT_TOKEN> with the one from BotFather).
+
+
+You’ll see JSON output. Look for "chat": {"id": ...}.
+
+
+Example:
+
+ "chat": {
+  "id": 987654321,
+  "first_name": "John",
+  "type": "private"
+}
+
+
+Here your chat_id = 987654321.
+
+
+
+Method B (Group or Channel)
+Create a group, add your bot to it, and send a test message.
+
+
+Use the same URL as above (getUpdates).
+
+
+You’ll see "chat":{"id":-123456789,"title":"MyTradingGroup","type":"group"}
+
+
+The negative number is your group’s chat ID.
+
+
+
+🔹 Step 3: Test Sending a Message
+Run this in your browser or with curl:
+curl "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage?chat_id=<YOUR_CHAT_ID>&text=Hello+from+my+bot"
+
+If it works, you’ll see the message in Telegram. ✅

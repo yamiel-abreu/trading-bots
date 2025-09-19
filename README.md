@@ -37,18 +37,21 @@ Python Bot that helps with Trading in-out
 
 # Key Difference Between the Bots
 
-Bot 1 (MACD/RSI) → looks for trend continuation signals (when momentum aligns with trend).
+Bot 1 (MACD/RSI) → looks for trend continuation signals (when momentum aligns with trend). 
+File name: swing_trading_ema_macd_rsi_alert_bot.py
 
-Bot 2 (Stochastic) → looks for pullback/reversal entries within the larger trend.
+Bot 2 (Stochastic) → looks for pullback/reversal entries within the larger trend. 
+File name: swing_trading_ema_stocastic_alert_bot.py
 
-In practice:
+
+## In practice:
 
 Bot 1 gives fewer, stronger “trend-following” signals.
 
 Bot 2 gives more frequent “buy dips / sell rallies” signals.
 
-⚡ Example:
-If EURUSD is trending up (50 EMA > 200 EMA):
+
+⚡ Example: If EURUSD is trending up (50 EMA > 200 EMA):
 
 Bot 1 alerts when momentum kicks back in (MACD bullish cross + RSI > 50).
 
